@@ -31,13 +31,33 @@ bool binary_search(const std::vector<int>& arr, int target) {
     return false;
 }
 
+std::vector<int> bubble_sort(std::vector<int>& arr){
+    for(int i = 0; i < arr.size(); i++){
+        for(int j = 0; j < arr.size() - 1 - i; j++){
+            if(arr[j] > arr[j+1]){
+                int temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+        }
+    }
+    return arr;
+}
+
 int main() {
     std::vector<int> arr = {1, 2, 3, 4, 5};
+    std::vector<int> arr1 = {5, 3, 8, 1, 2};
+
 
     std::cout << std::boolalpha;
 
     std::cout << linear_search(arr, 31) << std::endl;
     std::cout << binary_search(arr, 3) << std::endl;
+    std::vector<int> sorted = bubble_sort(arr1);
+
+    for (int num : sorted) {
+        std::cout << num << " ";
+    }
 
     return 0;
 }
