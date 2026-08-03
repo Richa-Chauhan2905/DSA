@@ -27,6 +27,29 @@ def validPalindrome(s: str) -> bool:
 
     return True
 
+def threeSum(arr: list[int]) -> list[list[int]]:
+    ans: list[list[int]] = []
+    sorted_arr = sorted(arr)
+    n = len(sorted_arr)
+    for i in range(n-2):
+        if i > 0 and sorted_arr[i] == sorted_arr[i - 1]:
+            continue
+
+        left = i + 1
+        right = n - 1
+        while left < right:
+            sum = sorted_arr[i] + sorted_arr[left] + sorted_arr[right]
+            if sum == 0:
+                ans.append([sorted_arr[i], sorted_arr[left], sorted_arr[right]])
+                left += 1
+                right -= 1
+            elif sum < 0:
+                left += 1
+            else: right -= 1
+
+    return ans
+
+
 def main():
     # TwoSum
     arr1 = [2, 3, 5, 6, 10]
@@ -35,5 +58,9 @@ def main():
     #palindrome
     s = "A man, a plan, a canal: Panama"
     print(validPalindrome(s))
+
+    #3sum
+    arr2 = [-1,0,1,2,-1,-4]
+    print(threeSum(arr2))
 
 main()
