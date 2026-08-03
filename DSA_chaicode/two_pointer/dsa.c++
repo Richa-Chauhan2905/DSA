@@ -67,6 +67,19 @@ vector<vector<int>> threeSum(vector<int> arr){
     return ans;
 }
 
+int containerWMostWater(vector<int> arr){
+    int left = 0;
+    int right = arr.size() - 1;
+    int maxArea = 0;
+    while(left < right){
+        int area = (right - left) * min(arr[left], arr[right]);
+        maxArea = max(maxArea, area);
+        if(arr[left] <= arr[right]) left++;
+        else right--;
+    }
+    return maxArea;
+}
+
 int main(){
     // // TwoSum
     // vector<int> arr1 = {2, 3, 5, 6, 10};
@@ -79,13 +92,18 @@ int main(){
     // string s = "A man, a plan, a canal: Panama";
     // cout << boolalpha << validPalindrome(s) << endl;
 
-    //3sum
-    vector<int> nums = {-1,0,1,2,-1,-4};
-    vector<vector<int>> ans = threeSum(nums);
-    for(vector<int> triplet : ans){
-        for(int num : triplet){
-           cout << num << " ";
-        }
-        cout << endl;
-    }
+    // //3sum
+    // vector<int> nums = {-1,0,1,2,-1,-4};
+    // vector<vector<int>> ans = threeSum(nums);
+    // for(vector<int> triplet : ans){
+    //     for(int num : triplet){
+    //        cout << num << " ";
+    //     }
+    //     cout << endl;
+    // }
+
+    //water container
+    vector<int> height = {1,8,6,2,5,4,8,3,7};
+    int solved = containerWMostWater(height);
+    cout << solved;
 }

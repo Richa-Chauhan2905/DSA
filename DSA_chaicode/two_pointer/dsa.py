@@ -49,6 +49,19 @@ def threeSum(arr: list[int]) -> list[list[int]]:
 
     return ans
 
+def containerWMostWater(arr: list[int]) -> int:
+    left = 0
+    right = len(arr) - 1
+    maxArea = 0
+
+    while left < right:
+        area = (right - left) * min(arr[left], arr[right])
+        maxArea = max(maxArea, area)
+        if arr[left] <= arr[right]:
+            left += 1
+        else: right -= 1
+
+    return maxArea
 
 def main():
     # TwoSum
@@ -62,5 +75,9 @@ def main():
     #3sum
     arr2 = [-1,0,1,2,-1,-4]
     print(threeSum(arr2))
+
+    #container
+    arr3 = [1,8,6,2,5,4,8,3,7]
+    print(containerWMostWater(arr3))
 
 main()
