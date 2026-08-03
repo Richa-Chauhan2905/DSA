@@ -80,6 +80,73 @@ int containerWMostWater(vector<int> arr){
     return maxArea;
 }
 
+int validTriangle(vector<int> arr){
+    sort(arr.begin(), arr.end());
+    int count = 0;
+    for(int k = 2; k < arr.size(); k++){
+        int left = 0;
+        int right = k - 1;
+        while(left < right){
+            if(arr[left] + arr[right] > arr[k]){
+                count += right - left;
+                right--;
+            }
+            else left++;
+        }
+    }
+    return count;
+}
+
+void moveZeroes(vector<int>& arr){
+    int slow = 0;
+    for(int i = 0; i < arr.size(); i++){
+        if(arr[i] != 0){
+            swap(arr[i], arr[slow]);
+            slow++;
+        }
+    }
+}
+
+void sortColors(vector<int>& arr){
+    int low = 0;
+    int mid = 0;
+    int high = arr.size() - 1;
+    while(mid <= high){
+        if(arr[mid] == 0){
+            swap(arr[mid], arr[low]);
+            low++;
+            mid++;
+        }
+        else if(arr[mid] == 1) mid++;
+        else{
+            swap(arr[mid], arr[high]);
+            high--;
+        }
+    }
+}
+
+int trapRainWater(vector<int> arr){
+    int left = 0;
+    int right = arr.size() - 1;
+    int maxL = 0;
+    int maxR = 0;
+    int total = 0;
+
+    while(left < right){
+        if(arr[left] < arr[right]){
+            if(arr[left] >= maxL) maxL = arr[left];
+            else total += maxL - arr[left];
+            left++;
+        }
+        else{
+            if(arr[right] >= maxR) maxR = arr[right];
+            else total += maxR - arr[right];
+            right--;
+        }
+    }
+    return total;
+}
+
 int main(){
     // // TwoSum
     // vector<int> arr1 = {2, 3, 5, 6, 10};
@@ -102,8 +169,34 @@ int main(){
     //     cout << endl;
     // }
 
-    //water container
-    vector<int> height = {1,8,6,2,5,4,8,3,7};
-    int solved = containerWMostWater(height);
-    cout << solved;
+    // //water container
+    // vector<int> height = {1,8,6,2,5,4,8,3,7};
+    // int solved = containerWMostWater(height);
+    // cout << solved;
+
+    // //validTriangle
+    // vector<int> tri = {2,2,3,4};
+    // cout << validTriangle(tri);
+
+    // //moveZeroes
+    // vector<int> arr = {0,1,0,3,12};
+    // moveZeroes(arr);
+
+    // for(int num : arr){
+    //     cout << num << " ";
+    // }
+    // cout << endl;
+
+    // //sortColors
+    // vector<int> arr = {2,0,2,1,1,0};
+    // sortColors(arr);
+
+    // for(int num : arr){
+    //     cout << num << " ";
+    // }
+    // cout << endl;
+
+    //trap rain water
+    vector<int> arr = {4,2,0,3,2,5};
+    cout << trapRainWater(arr);
 }
