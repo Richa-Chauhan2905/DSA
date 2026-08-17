@@ -63,9 +63,9 @@ bool validAnagram(string s, string t)
     }
     for (char c : t)
     {
+        count[c]--;
         if (count[c] < 0)
             return false;
-        count[c]--;
     }
 
     return true;
@@ -96,6 +96,77 @@ vector<vector<string>> groupAnagrams(vector<string> words)
     }
     return result;
 }
+
+vector<int> kMostFreq(vector<int> arr, int k)
+{
+    // we create buckets of each value in the array and then try to count the frequency of each element
+    unordered_map<int, int> count;
+    int n = arr.size();
+    for (int v : arr)
+    {
+        // find the key named v and increse it's value by 1
+        count[v]++;
+    }
+
+    // declare 2D array bucket of size arr+1(an array containing multiple arrays)
+    vector<vector<int>> buckets(arr.size() + 1);
+
+    // auto extracts the key and value from the map --> "For every entry in count, give me its number as value and its frequency as frequency"
+    for (auto &[value, freq] : count)
+    {
+        // we create buckets of frequencies, so here put the value (ex: 1) inside the frequency (ex: 3) bucket
+        buckets[freq].push_back(value);
+    }
+
+    vector<int> result;
+
+    for (int f = arr.size(); f >= 1; f--)
+    {
+
+        // for values in buckets with frequency f, push back the value in the results array, therefore the 1, or 2 or 5 whichever element is there will be pushed back in the result array
+        for (int value : buckets[f])
+        {
+            result.push_back(value);
+
+            // if the result's size reaches k, return the result which is the array of k most frequently occuring characters.
+            if (result.size() == k)
+            {
+                return result;
+            }
+        }
+    }
+    return result;
+}
+
+vector<int> productExceptSelf(vector<int> arr){
+    //basic idea is to have a prefix and a suffix and then multiply them to get the product except self
+    int n = arr.size();
+
+    //output array should be initilized with n elements else we can't add anything at a particular index
+    vector<int> output(n);
+
+    //initialize prefix with 1;
+    int prefix = 1;
+
+    for(int i = 0; i < n; i++){
+        //output[i] is the prefix, so firstly output[0] would be 1;
+        output[i] = prefix;
+
+        //then we multiply the prefix with the current element to get the next prefix
+        prefix = prefix * arr[i];
+    }
+
+    int suffix = 1;
+    for(int i = n-1; i >= 0; i--){
+        //we multiply the current element with the suffix as we go on to create the output array we need
+        output[i] = output[i] * suffix;
+
+        //same as prefix keep on multplying for next element
+        suffix = suffix * arr[i];
+    }
+    return output;
+}
+
 int main()
 {
 
@@ -161,5 +232,35 @@ int main()
 
         cout << "]" << endl;
     }
+
+    // kMostFrequent
+    vector<int> nums = {1, 1, 1, 1, 2, 2, 2, 3, 4, 4, 4, 6, 6, 6, 7, 7, 8, 8, 8, 9, 9, 9, 9};
+    int k = 5;
+
+    vector<int> result1 = kMostFreq(nums, k);
+
+    cout << "[ ";
+
+    for (int num : result1)
+    {
+        cout << num << " ";
+    }
+
+    cout << "]" << endl;
+
+    //productExceptSelf
+    vector<int> arr2 = {1, 2, 3, 4};
+
+    vector<int> result2 = productExceptSelf(arr2);
+
+    cout << "[ ";
+
+    for (int x : result2)
+    {
+        cout << x << " ";
+    }
+
+    cout << "]" << endl;
+
     return 0;
 }
