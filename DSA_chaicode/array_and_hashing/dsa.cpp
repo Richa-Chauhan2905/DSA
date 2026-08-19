@@ -138,33 +138,58 @@ vector<int> kMostFreq(vector<int> arr, int k)
     return result;
 }
 
-vector<int> productExceptSelf(vector<int> arr){
-    //basic idea is to have a prefix and a suffix and then multiply them to get the product except self
+vector<int> productExceptSelf(vector<int> arr)
+{
+    // basic idea is to have a prefix and a suffix and then multiply them to get the product except self
     int n = arr.size();
 
-    //output array should be initilized with n elements else we can't add anything at a particular index
+    // output array should be initilized with n elements else we can't add anything at a particular index
     vector<int> output(n);
 
-    //initialize prefix with 1;
+    // initialize prefix with 1;
     int prefix = 1;
 
-    for(int i = 0; i < n; i++){
-        //output[i] is the prefix, so firstly output[0] would be 1;
+    for (int i = 0; i < n; i++)
+    {
+        // output[i] is the prefix, so firstly output[0] would be 1;
         output[i] = prefix;
 
-        //then we multiply the prefix with the current element to get the next prefix
+        // then we multiply the prefix with the current element to get the next prefix
         prefix = prefix * arr[i];
     }
 
     int suffix = 1;
-    for(int i = n-1; i >= 0; i--){
-        //we multiply the current element with the suffix as we go on to create the output array we need
+    for (int i = n - 1; i >= 0; i--)
+    {
+        // we multiply the current element with the suffix as we go on to create the output array we need
         output[i] = output[i] * suffix;
 
-        //same as prefix keep on multplying for next element
+        // same as prefix keep on multplying for next element
         suffix = suffix * arr[i];
     }
     return output;
+}
+
+int longestConsecutiveSequence(vector<int> arr)
+{
+    // basic idea for optimized approach is to store the length of the consecutive sequence and then return it
+    // put all elements in the set and sort
+    unordered_set<int> nums(arr.begin(), arr.end());
+    int best = 0;
+    // check every number in set
+    for (int n : nums)
+    {
+        // if the previous number is present in the set then this is not the start of the sequence
+        if (nums.find(n - 1) != nums.end())
+            continue;
+        // n is the start of the sequence
+        int length = 1;
+        // keep checking for consecutive numbers and increase the length if we find any
+        while (nums.find(n + length) != nums.end())
+            length++;
+        best = max(best, length);
+    }
+    return best;
 }
 
 int main()
@@ -248,7 +273,7 @@ int main()
 
     cout << "]" << endl;
 
-    //productExceptSelf
+    // productExceptSelf
     vector<int> arr2 = {1, 2, 3, 4};
 
     vector<int> result2 = productExceptSelf(arr2);
@@ -261,6 +286,12 @@ int main()
     }
 
     cout << "]" << endl;
+
+    vector<int> arr3 = {100, 4, 200, 1, 3, 2};
+
+    int result3 = longestConsecutiveSequence(arr3);
+
+    cout << result3 << endl;
 
     return 0;
 }
