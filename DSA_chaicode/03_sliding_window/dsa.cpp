@@ -71,12 +71,14 @@ long long maxSubarraySumUnique(vector<int> arr, int k){
 }
 
 int maxPointsFromCards(vector<int> arr, int k){
+    //the only addition here different from other sliding window questions is the calculation of total
+    //other than that we do the same thing: first calculate the window's sum and then move it forward
     //the idea is to calculate the MINIMUM amount we can LEAVE OUT and then subtract it from the total so we can get MAXIMUM return
     int n = arr.size();
     //a total pointer that counts the total
     int total = 0;
     for(int i : arr){
-        //this total is used further to know the total amount we will LEAVE
+        //this total is used further to know the total amount we have in the array
         total += i;
     }
 
