@@ -99,9 +99,61 @@ int maxPointsFromCards(vector<int> arr, int k){
         //we take whichever is minimum so we can maximize the amount we WILL TAKE
         minSum = min(winSum, minSum);
     }
-
     return total-minSum;
+}
 
+int longestSubstringNoRepeat(string s){
+    //Here the idea is to the go on with the window, if we encounter a duplicate, we can just shrink the window as in move the Left pointer forward so window size is decreased. And then after that we can check for the new window
+    unordered_map<int, char> last;
+    // vector<int> last(256, -1); //Use this for faster retrieval of the element
+    int L = 0;
+    int max_length = 0;
+    int n = s.length();
+
+    for(int R = 0; R < n; R++){
+        //This condition checks 2 things
+        //1. If the element already EXISTS in the MAP
+        //2. What is the index of that value, as in if it is inside the current window or not if it is, the index WILL be GREATER or EQUAL to L bcause it is present in the window
+        if(last.find(s[R]) != last.end() && last[s[R]] >= L){
+            //==============if(last[s[R]] >= left){ --> use this if using array indexing=============
+            //if the condition is true, we can point L to the index AFTER the value
+            //If a is present in the set at index 0, we can now point L to one so it can SKIP the a present in the window ans shrink the window to not contain the duplicate
+            //Basically we JUMP L elements
+            L = last[s[R]] + 1;
+        }
+
+        last[s[R]] = R; //add the current element to the map
+
+        max_length = max(max_length, R - L + 1);
+    }
+    return max_length;
+}
+
+int longestRepeatingCharReplace(string s, int k){
+    //The idea is to check how many replacement we will require in the current window, if it is greater than k then we shrink the window
+    int left = 0;
+    //The frequency of a char is stored in the map
+    unordered_map<char, int> freq;
+    int maxFreq = 0;
+    int best = 0;
+
+    for(int right = 0; right < s.length(); right++){
+        //add the current element to the map with it's frequency
+        freq[s[right]]++;
+        //max frequency should be max of both current and maxFreq
+        maxFreq = max(maxFreq, freq[s[right]]);
+        //this condition checks if the CURRENT WINDOW SIZE - the maxFreq currently is greater than k
+        //If the current window size is 5 and k is 1, and the maxFreq is 3 for the letter A, we get 5-3=2 which is greater than k
+        //so we can't use that window sequence so we can SHRINK the window
+        if(((right - left + 1) - maxFreq) > k){
+            //remove the left element from the map and increase the pointer
+            freq[s[left]]--;
+            left++;
+        } 
+        //the best sequence is max from best and the current window
+        best = max(best, right - left + 1);
+    }
+    return best;
 }
 
 
@@ -127,6 +179,12 @@ int main()
     long long result2 = maxPointsFromCards(cards, k2);
 
     cout << "Maximum score: " << result2 << endl;
+
+    string s = "bbbb";
+    cout << "Longest substr without repeat is: " << longestSubstringNoRepeat(s) << endl;
+
+    string s1 = "AABABBA";
+    cout << "Longest Repeating Char Replace is: " << longestRepeatingCharReplace(s1, 1) << endl;
 
     return 0;
 }
