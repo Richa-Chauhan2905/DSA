@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <climits>
 #include <unordered_map>
+#include <deque>
 
 using namespace std;
 
@@ -176,6 +177,7 @@ int longestRepeatingCharReplace(string s, int k)
 }
 
 string minWindow(string s, string t)
+// basic idea is to match the current window with the have variable and check if it satisfies it if yes check if it is the minimum length we can get
 {
     // store characters from t in this map
     unordered_map<char, int> need;
@@ -250,6 +252,100 @@ string minWindow(string s, string t)
     return s.substr(bestStart, bestLength);
 }
 
+bool permutationInString(string s1, string s2)
+{
+    // s1 is the smaller string and s2 is the larger string so we first check if s1 is greater than s2 if yes we cant work with it
+    int k = s1.length();
+    if (k > s2.length())
+        return false;
+    unordered_map<char, int> target;
+    unordered_map<char, int> window;
+
+    // add all the smaller string chars to target map
+    for (int c : s1)
+    {
+        target[c]++;
+    }
+
+    // add THE NUMBER OF CHAR PRESENT IN S1(smaller string) from s2 to current window
+    // so here if k is 2 then we add 2 characters from s2(longer string) to the window so window size itself remains k and not exceed it
+    // we need this because the permutation needs to be contagious
+    // so there has to be only k elements in the window at most
+    for (int i = 0; i < k; i++)
+    {
+        window[s2[i]]++;
+    }
+
+    // if both maps are same then we found our target and we return true
+    if (window == target)
+        return true;
+
+    // slide the window forward if not found
+    // so we point right at k in this case at index 1 because k = 2 so we have the window size of 0..1 right now
+    // so we start at k and go on until the end
+    for (int right = k; right < s2.length(); right++)
+    {
+        // remove the left char from the window
+        char leftChar = s2[right - k];
+        window[leftChar]--;
+
+        // if it is occuring only once, erase it from the window
+        if (window[leftChar] == 0)
+        {
+            window.erase(leftChar);
+        }
+
+        // add the new char from the right to the window
+        char rightChar = s2[right];
+        window[rightChar]++;
+
+        // if target found, return true
+        if (window == target)
+            return true;
+    }
+    return false;
+}
+
+vector<int> slidingWindowMax(vector<int> nums, int k)
+{
+    vector<int> answer;
+    deque<int> dq;
+
+    int n = nums.size();
+
+    for (int i = 0; i < n; i++)
+    {
+        // check in the queue if there is anything to compare with, if yessss then we compare that VALUE(nums[dq.back()]) with the current number else just go on
+        while (!dq.empty() && nums[dq.back()] <= nums[i])
+        {
+            dq.pop_back();
+        }
+        // push back the current indices in the queue
+        dq.push_back(i);
+
+        // now check if the indices that id present at the front has already been passed out by the window
+        // for ex: if the first is an index 1 and the current window is 234
+        // we dont need the one in the queue
+        // to check the index we do i - k
+        // so i would be 4 for now and if k is 3, we get 4-3 = 1 which IS less than the current window indices so we POP the FRONT
+        if (dq.front() <= i - k)
+        {
+            dq.pop_front();
+        }
+
+        // now when i pointer has successfully covered ONE window
+        // that is 012 and then moved forward with 3
+        // we can say that i is greater than current k
+        // and that the element has already passed out of the window
+        // so we just add THAT element to the answer array
+        if (i >= k - 1)
+        {
+            answer.push_back(nums[dq.front()]);
+        }
+    }
+    return answer;
+}
+
 int main()
 {
     vector<int> arr = {2, 1, 5, 1, 3, 2};
@@ -282,6 +378,24 @@ int main()
     string s2 = "ABDCEABDEDABCAB";
     string t = "ABC";
     cout << "MinimumWindow possible for string is: " << minWindow(s2, t) << endl;
+
+    string s3 = "ab";
+    string s4 = "eidbaooo";
+    cout << permutationInString(s3, s4) << endl;
+
+    vector<int> nums = {1, 3, -1, -3, 5, 3, 6, 7};
+    int k3 = 3;
+
+    vector<int> result3 = slidingWindowMax(nums, k3);
+
+    cout << "Maximum of each window: [ ";
+
+    for (int x : result3)
+    {
+        cout << x << " ";
+    }
+
+    cout << "]" << endl;
 
     return 0;
 }
